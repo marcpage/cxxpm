@@ -1,0 +1,49 @@
+[project]
+name = "cxxpm"
+description = "C++ Dependency Management"
+readme = "README.md"
+license = { file = "LICENSE" }
+dynamic = ["version"]
+requires-python = ">= 3.10"
+dependencies = ["PyYAML==6.0.3"]
+keywords = ["C++", "dependency", "package manager", "cmake"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: The Unlicense (Unlicense)",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Utilities",
+    "Topic :: Software Development",
+]
+authors = [{ name = "Marc Page", email = "marcallenpage@gmail.com" }]
+
+[project.scripts]
+settings = "cxxpm.cxxpm:main"
+
+[tool.setuptools.package-data]
+"*" = ["*.mako"]
+
+[tool.setuptools.packages.find]
+include = ["cxxpm*"]
+
+[project.optional-dependencies]
+dev = ["black>=24.3.0", "pylint>=3.1.0"]
+test = ["pytest>=8.1.1", "coverage>=7.4.4"]
+doc = []
+
+[project.urls]
+Homepage = "https://github.com/marcpage/cxxpm"
+Documentation = "https://github.com/marcpage/cxxpm"
+Repository = "https://github.com/marcpage/cxxpm.git"
+Issues = "https://github.com/marcpage/cxxpm/issues"
+Changelog = "https://github.com/marcpage/cxxpm/releases"
+
+[tool.setuptools.dynamic]
+version = { attr = "cxxpm.__version__" }
+
+[build-system]
+requires = ["setuptools >= 69.2"]
+build-backend = "setuptools.build_meta"
