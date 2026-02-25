@@ -10,7 +10,7 @@
 [![GitHub top language](https://img.shields.io/github/languages/top/marcpage/cxxpm?style=plastic)](https://github.com/marcpage/cxxpm)
 [![size sheild](https://img.shields.io/github/languages/code-size/marcpage/cxxpm?style=plastic)](https://github.com/marcpage/cxxpm)
 
-[![status sheild](https://img.shields.io/static/v1?label=test+coverage&message=83%&color=active&style=plastic)](https://github.com/marcpage/cxxpm/blob/main/Makefile#L4)
+[![status sheild](https://img.shields.io/static/v1?label=test+coverage&message=98%&color=active&style=plastic)](https://github.com/marcpage/cxxpm/blob/main/Makefile#L4)
 [![issues sheild](https://img.shields.io/github/issues-raw/marcpage/cxxpm?style=plastic)](https://github.com/marcpage/cxxpm/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/marcpage/cxxpm?style=flat)](https://github.com/marcpage/cxxpm/pulls)
 
