@@ -71,7 +71,8 @@ def fill_cache(dependency: str, cache_dir: str, repos: list[str]) -> bool:
             download_file(repo, dependency, cache_dir)
             return True
 
-        except HTTPError:
+        except HTTPError as error:
+            print(f"⚠️⚠️⚠️ Unable to download {dependency} from {repo}: {error}")
             continue
 
         except MissingSchema:
