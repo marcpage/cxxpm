@@ -26,3 +26,11 @@ OS:
 [![Linux](https://img.shields.io/static/v1?label=&message=Linux&color=seashell&logoColor=black&style=plastic&logo=linux)](https://linux.org/)
 
 Dependency manager for C++
+
+## Building
+
+```bash
+make lint format coverage
+```
+
+This will ensure the code passes lint test, formats the code according to `black`, and runs the tests and ensures code coverage.
