@@ -43,6 +43,9 @@ def patch_coverage(path: str | None, readme_contents: str) -> str:
         print(f"❌❌❌ Coverage: {coverage}% (below {minimum_coverage}%) ❌❌❌")
         return_code(1)
 
+    if coverage > minimum_coverage:
+        print(f"🟢🟢🟢 Coverage: {coverage}% (was {minimum_coverage}%) 🟢🟢🟢")
+
     search_pattern = existing_coverage.group(0)
     replace_pattern = search_pattern.replace(str(minimum_coverage), str(coverage))
     return readme_contents.replace(search_pattern, replace_pattern)
