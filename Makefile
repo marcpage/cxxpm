@@ -1,10 +1,10 @@
 .PHONY:clean venv test coverage lint format deploy
 all:clean test coverage lint
 
-MIN_TEST_COVERAGE=0
 INITIAL_PYTHON?=python3
 VENV_DIR?=.venv
 LIBRARY=cxxpm
+README=README.md
 VENV_PYTHON?=$(VENV_DIR)/bin/python
 VENV_PIP?=$(VENV_DIR)/bin/pip
 SET_ENV?=. $(VENV_DIR)/bin/activate
@@ -13,6 +13,7 @@ TESTS=$(shell find tests -type f -iname "test_*.py")
 FORMAT_FILE=$(VENV_DIR)/format.txt
 LINT_FILE=$(VENV_DIR)/lint.txt
 COVERAGE_FILE=.coverage
+COVERAGE_REPORT=build/coverage
 DEPLOY_FILE=$(VENV_DIR)/deploy.txt
 PROJECT_FILE=pyproject.toml
 SLEEP_TIME_IN_SECONDS=1
@@ -41,24 +42,22 @@ $(COVERAGE_FILE): $(VENV_DIR)/touchfile $(SOURCES) $(TESTS)
 test: $(COVERAGE_FILE)
 
 coverage: $(COVERAGE_FILE)
-	@$(SET_ENV); $(VENV_PYTHON) -m coverage report -m --sort=cover --skip-covered --fail-under=$(MIN_TEST_COVERAGE)
-	@if grep --quiet "test+coverage&message=$(MIN_TEST_COVERAGE)%" README.md; then true; else echo "Update README.md test coverage" && false; fi
+	@$(SET_ENV); $(VENV_PYTHON) -m coverage report -m --sort=cover --skip-covered > $(COVERAGE_REPORT)
+	@cat $(COVERAGE_REPORT)
+	@$(SET_ENV); $(VENV_PYTHON) scripts/update_readme.py $(README) $(COVERAGE_REPORT)
 	
 
 $(FORMAT_FILE): $(VENV_DIR)/touchfile $(SOURCES)
 	@$(SET_ENV); $(PIP_INSTALL) ".[dev]"
-	@$(SET_ENV); $(VENV_PYTHON) -m black $(LIBRARY) &> $@
+	@$(SET_ENV); $(VENV_PYTHON) -m black $(LIBRARY) tests scripts &> $@
 
 format: $(FORMAT_FILE)
 	@cat $^
-	@perl -i -pe's/test\+coverage\&message=..%/test\+coverage\&message=$(MIN_TEST_COVERAGE)%/g' README.md
-	@perl -i -pe's@released&message=v\d+.\d+.\d+&@released&message=v$(VERSION)&@g' README.md
-	@perl -i -pe's@cxxpm/\d+.\d+.\d+/@cxxpm/$(VERSION)/@g' README.md
 
 $(LINT_FILE): $(VENV_DIR)/touchfile $(SOURCES)
 	@$(SET_ENV); $(PIP_INSTALL) ".[dev]"
-	-@$(SET_ENV); $(VENV_PYTHON) -m pylint --disable cyclic-import $(LIBRARY) --output $@
-	-@$(SET_ENV); $(VENV_PYTHON) -m black $(LIBRARY) --check >> $@  2>&1
+	-@$(SET_ENV); $(VENV_PYTHON) -m pylint --disable cyclic-import $(LIBRARY) tests scripts --output $@
+	-@$(SET_ENV); $(VENV_PYTHON) -m black $(LIBRARY) tests scripts --check >> $@  2>&1
 
 lint: $(LINT_FILE)
 	@cat $^
@@ -68,9 +67,8 @@ lint: $(LINT_FILE)
 $(DEPLOY_FILE):$(LINT_FILE) $(COVERAGE_FILE) $(PROJECT_FILE) $(SOURCES) lint coverage
 	@echo "Preparation cleanup"
 	@rm -Rf dist build *.egg-info $(VENV_DIR)/$(TEST_SERVER_TEST_DIR) $(VENV_DIR)/$(PROD_SERVER_TEST_DIR)
-	@echo "Validating version strings are correct"
-	@if grep --quiet "released&message=v$(VERSION)&" README.md; then true; else echo "Update README.md badge version" && false; fi
-	@if grep --quiet "cxxpm/$(VERSION)/" README.md; then true; else echo "Update README.md PyPI version" && false; fi
+	@echo "Setting version strings"
+	@$(SET_ENV); $(VENV_PYTHON) scripts/update_readme.py $(README)
 	@echo "Putting tests in staging test dir: $(VENV_DIR)/$(TEST_SERVER_TEST_DIR)"
 	@mkdir -p $(VENV_DIR)/$(TEST_SERVER_TEST_DIR)
 	@cp -R tests $(VENV_DIR)/$(TEST_SERVER_TEST_DIR)/
