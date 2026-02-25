@@ -3,7 +3,6 @@
 
 """Test the main command"""
 
-
 from cxxpm.cxxpm import main
 
 
