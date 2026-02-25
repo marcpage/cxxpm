@@ -10,16 +10,17 @@ from tempfile import TemporaryDirectory
 
 from cxxpm.cxxpm import main
 
+# http://speedtest.tele2.net/1MB.zip
 TEST_YAML = """
 cache: "%(cache)s"
 
 repositories:
-  - "https://file-examples.com/storage/fe796f9a72699f68e92e313/2017/02"
+  - "http://speedtest.tele2.net"
   - "%(repo_path)s"
 
 dependencies:
   - file.zip
-  - zip_2MB.zip
+  - 1MB.zip
 """
 
 
@@ -41,10 +42,10 @@ def test_main() -> None:
             )
 
         main()
-        assert isfile(join(cache_dir, "zip_2MB.zip"))
+        assert isfile(join(cache_dir, "1MB.zip"))
         assert isfile(join(cache_dir, "file.zip"))
         main()
-        assert isfile(join(cache_dir, "zip_2MB.zip"))
+        assert isfile(join(cache_dir, "1MB.zip"))
         assert isfile(join(cache_dir, "file.zip"))
 
     with TemporaryDirectory("test_download") as cache_dir, chdir(cache_dir):
@@ -57,7 +58,7 @@ def test_main() -> None:
             )
 
         main()
-        assert isfile(join(cache_dir, "zip_2MB.zip"))
+        assert isfile(join(cache_dir, "1MB.zip"))
         assert not isfile(join(cache_dir, "file.zip"))
 
 
