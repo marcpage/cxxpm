@@ -5,7 +5,7 @@ readme = "README.md"
 license = { file = "LICENSE" }
 dynamic = ["version"]
 requires-python = ">= 3.10"
-dependencies = ["PyYAML==6.0.3", "requests==2.32.5"]
+dependencies = ["PyYAML==6.0.3", "requests==2.33.0"]
 keywords = ["C++", "dependency", "package manager", "cmake"]
 classifiers = [
     "Development Status :: 1 - Planning",
